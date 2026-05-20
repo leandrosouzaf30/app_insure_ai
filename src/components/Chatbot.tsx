@@ -29,7 +29,7 @@ export const Chatbot: React.FC = () => {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleSendMessage = async (e: React.FormEvent) => {
+const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
@@ -44,17 +44,47 @@ export const Chatbot: React.FC = () => {
     setInputValue('');
     setIsTyping(true);
 
-    // Simula o tempo de resposta de uma IA / LLM local
-    setTimeout(() => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: userMessage.text,
+          top_k: 3,
+          model: "string" // Mude para o nome do modelo que sua API espera receber
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Falha na resposta do servidor.');
+      }
+
+      const data = await response.json();
+
+      // AJUSTE AQUI: Mapeia o campo "answer" retornado pela sua API
       const botMessage: Message = {
         id: crypto.randomUUID(),
-        text: `Recebi sua mensagem: "${userMessage.text}". Em breve integraremos este input com o serviço de IA!`,
+        text: data.answer, // <--- Modificado de data.response para data.answer
         sender: 'bot',
         timestamp: new Date(),
       };
+
       setMessages((prev) => [...prev, botMessage]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          text: 'Não consegui obter uma resposta do servidor. Verifique a conexão com a API.',
+          sender: 'bot',
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1200);
+    }
   };
 
   return (
