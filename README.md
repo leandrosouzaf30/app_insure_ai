@@ -63,6 +63,14 @@ Abra `http://localhost:5173` no navegador.
 
 A interface de login usa `signIn()` de `@aws-amplify/auth` e valida se `result.isSignedIn` para confirmar a autenticação.
 
+## Chatbot
+
+Após o login bem-sucedido, o aplicativo renderiza o componente `Chatbot` em `src/components/Chatbot.tsx`.
+
+- O `Chatbot` exibe uma interface de mensagens com histórico e entrada de texto.
+- Ele simula respostas de assistente virtual local enquanto aguarda integração futura com um serviço de IA/LLM.
+- O componente roda somente para usuários autenticados, conforme `src/App.jsx`.
+
 ## Scripts úteis
 
 - `npm run dev` — inicia o servidor de desenvolvimento Vite
