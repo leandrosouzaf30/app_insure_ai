@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getCurrentUser, signOut } from '@aws-amplify/auth';
 import { Login } from './features/Account/Login';
 import { Chatbot } from './features/Chat/Chatbot';
+import './App.css';
 
 
 
@@ -43,7 +44,16 @@ function App() {
   return (
     <>
       {isAuthenticated ? (
-        <main className="flex-1 flex flex-col justify-center items-center p-6">
+        <main className="app-shell">
+          <div className="app-toolbar">
+            <div>
+              <p className="app-welcome">Você está conectado</p>
+              <h1 className="app-heading">Painel do Assistente</h1>
+            </div>
+            <button type="button" className="btn-ghost" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
           <Chatbot />
         </main>
       ) : (

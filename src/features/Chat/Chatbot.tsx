@@ -88,76 +88,51 @@ const handleSendMessage = async (e: React.FormEvent) => {
   };
 
   return (
-    <div className="flex flex-col h-[650px] w-full max-w-4xl bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-      {/* Top Bar do Chat */}
-      <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
-          <div>
-            <h2 className="font-semibold text-lg">Assistente Local</h2>
-            <p className="text-xs text-blue-100">Online | Ambiente Floci</p>
-          </div>
+    <div className="chat-card">
+      <header className="chat-header">
+        <div>
+          <div className="chat-status">Online</div>
+          <h2>Assistente Local</h2>
+          <p>Ambiente Floci / Cognito local</p>
+        </div>
+      </header>
+
+      <div className="chat-body">
+        <div className="message-list">
+          {messages.map((msg) => (
+            <div key={msg.id} className={`message-row ${msg.sender === 'user' ? 'message-user' : 'message-bot'}`}>
+              <div className="message-bubble">
+                <p>{msg.text}</p>
+                <span className="message-meta">
+                  {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+            </div>
+          ))}
+
+          {isTyping && (
+            <div className="message-row message-bot">
+              <div className="typing-indicator">
+                <span />
+                <span />
+                <span />
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
       </div>
 
-      {/* Histórico de Mensagens */}
-      <div className="flex-1 p-6 overflow-y-auto bg-gray-50 space-y-4">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex w-full ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-[70%] px-4 py-3 rounded-2xl shadow-sm text-sm ${
-                msg.sender === 'user'
-                  ? 'bg-blue-600 text-white rounded-tr-none'
-                  : 'bg-white text-gray-800 border border-gray-200 rounded-tl-none'
-              }`}
-            >
-              <p className="leading-relaxed break-words">{msg.text}</p>
-              <span
-                className={`block text-[10px] mt-1 text-right ${
-                  msg.sender === 'user' ? 'text-blue-200' : 'text-gray-400'
-                }`}
-              >
-                {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </span>
-            </div>
-          </div>
-        ))}
-
-        {/* Indicador de Digitação do Bot */}
-        {isTyping && (
-          <div className="flex justify-start">
-            <div className="bg-white border border-gray-200 px-4 py-3 rounded-2xl rounded-tl-none flex items-center space-x-1">
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
-          </div>
-        )}
-        
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input de Envio */}
-      <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-gray-100 flex space-x-3">
+      <form onSubmit={handleSendMessage} className="chat-footer">
         <input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Digite sua mensagem aqui..."
-          className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-gray-800 transition-all text-sm"
+          className="chat-input"
         />
-        <button
-          type="submit"
-          disabled={!inputValue.trim()}
-          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-medium rounded-xl transition-colors shadow-md shadow-blue-100 flex items-center space-x-1"
-        >
-          <span>Enviar</span>
-          <svg className="w-4 h-4 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l92 2-9-18-9 18 9-2zm0 0v-8" />
-          </svg>
+        <button type="submit" disabled={!inputValue.trim()} className="btn-primary btn-send">
+          Enviar
         </button>
       </form>
     </div>
