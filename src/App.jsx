@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Login } from './components/Login';
 import { getCurrentUser, signOut } from '@aws-amplify/auth';
-import { Chatbot } from './components/Chatbot';
+import { Login } from './features/Account/Login';
+import { Chatbot } from './features/Chat/Chatbot';
+
 
 
 function App() {

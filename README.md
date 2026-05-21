@@ -55,6 +55,8 @@ Amplify.configure({
 ```
 
 > O endpoint `http://localhost:5173/cognito` usa a configuração de proxy do Vite para evitar CORS e redirecionar para o Floci local.
+>
+> O código principal de UI agora está em `src/features/Account` e `src/features/Chat`.
 
 ## Executar em desenvolvimento
 
@@ -68,9 +70,11 @@ Abra `http://localhost:5173` no navegador.
 
 A interface de login usa `signIn()` de `@aws-amplify/auth` e valida se `result.isSignedIn` para confirmar a autenticação.
 
+O código de login está em `src/features/Account/Login.tsx`.
+
 ## Chatbot
 
-Após o login bem-sucedido, o aplicativo renderiza o componente `Chatbot` em `src/components/Chatbot.tsx`.
+Após o login bem-sucedido, o aplicativo renderiza o componente `Chatbot` em `src/features/Chat/Chatbot.tsx`.
 
 - O `Chatbot` exibe uma interface de mensagens com histórico e entrada de texto.
 - Ele simula respostas de assistente virtual local enquanto aguarda integração futura com um serviço de IA/LLM.
