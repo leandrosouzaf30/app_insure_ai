@@ -92,8 +92,6 @@ const handleSendMessage = async (e: React.FormEvent) => {
       <header className="chat-header">
         <div>
           <div className="chat-status">Online</div>
-          <h2>Assistente Local</h2>
-          <p>Ambiente Floci / Cognito local</p>
         </div>
       </header>
 

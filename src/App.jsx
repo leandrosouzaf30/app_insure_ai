@@ -47,8 +47,7 @@ function App() {
         <main className="app-shell">
           <div className="app-toolbar">
             <div>
-              <p className="app-welcome">Você está conectado</p>
-              <h1 className="app-heading">Painel do Assistente</h1>
+              <p className="app-welcome">Painel do Assistente</p>
             </div>
             <button type="button" className="btn-ghost" onClick={handleLogout}>
               Logout

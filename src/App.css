@@ -195,7 +195,6 @@ body {
 }
 
 .page-shell {
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -350,7 +349,7 @@ body {
 
 .chat-body {
   background: #f8fafc;
-  padding: 28px;
+  padding: 16px;
   overflow: hidden;
 }
 
@@ -375,7 +374,7 @@ body {
 }
 
 .message-bubble {
-  max-width: 78%;
+  /* max-width: 78%; */
   padding: 16px 18px;
   border-radius: 22px;
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
@@ -400,6 +399,7 @@ body {
 
 .message-meta {
   display: block;
+  text-align: end;
   margin-top: 12px;
   font-size: 0.8rem;
   color: rgba(99, 102, 241, 0.75);
