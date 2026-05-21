@@ -41,6 +41,15 @@ aws cognito-idp admin-set-user-password \
   --permanent \
   --endpoint-url $ENDPOINT
 
+echo "5. Gravando variáveis de ambiente em .env.local (para Vite)..."
+# Escreve as variáveis com prefixo VITE_ para que o app frontend possa acessá-las via import.meta.env
+cat > .env.local <<EOF
+VITE_USER_POOL_ID=$USER_POOL_ID
+VITE_USER_POOL_CLIENT_ID=$CLIENT_ID
+EOF
+
+echo "-> .env.local atualizado"
+
 echo "--------------------------------------------------"
 echo "Configuração concluída com sucesso!"
 echo "Copie estes valores para o seu arquivo src/aws-exports.ts:"
