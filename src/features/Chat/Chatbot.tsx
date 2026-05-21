@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { sendMessage } from "./services/chatService";
 
 interface Message {
   id: string;
@@ -29,45 +30,33 @@ export const Chatbot: React.FC = () => {
     scrollToBottom();
   }, [messages, isTyping]);
 
-const handleSendMessage = async (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!inputValue.trim()) return;
 
     const userMessage: Message = {
       id: crypto.randomUUID(),
       text: inputValue,
-      sender: 'user',
+      sender: "user",
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
+    setInputValue("");
     setIsTyping(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          question: userMessage.text,
-          top_k: 3,
-          model: "string" // Mude para o nome do modelo que sua API espera receber
-        }),
+      const data = await sendMessage({
+        question: userMessage.text,
+        top_k: 3,
+        model: "string",
       });
 
-      if (!response.ok) {
-        throw new Error('Falha na resposta do servidor.');
-      }
-
-      const data = await response.json();
-
-      // AJUSTE AQUI: Mapeia o campo "answer" retornado pela sua API
       const botMessage: Message = {
         id: crypto.randomUUID(),
-        text: data.answer, // <--- Modificado de data.response para data.answer
-        sender: 'bot',
+        text: data.answer,
+        sender: "bot",
         timestamp: new Date(),
       };
 
@@ -77,8 +66,8 @@ const handleSendMessage = async (e: React.FormEvent) => {
         ...prev,
         {
           id: crypto.randomUUID(),
-          text: 'Não consegui obter uma resposta do servidor. Verifique a conexão com a API.',
-          sender: 'bot',
+          text: "Não consegui obter uma resposta do servidor.",
+          sender: "bot",
           timestamp: new Date(),
         },
       ]);
