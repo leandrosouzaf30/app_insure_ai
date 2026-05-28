@@ -43,7 +43,7 @@ function App() {
 
   return (
     <>
-      {isAuthenticated ? (
+      {!isAuthenticated ? (
         <main className="app-shell">
           <div className="app-toolbar">
             <div>

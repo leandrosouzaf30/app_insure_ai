@@ -1,12 +1,24 @@
-# React + Vite
+# app_insure_ai
 
-Aplicação React + Vite com autenticação Cognito local usando AWS Floci.
+Aplicação frontend React com autenticação AWS Cognito local e interface de chatbot para atendimento no segmento de seguros.
+
+## Visão geral
+
+Este projeto é uma interface web construída com React e Vite. Ele usa AWS Amplify para autenticação Cognito local e oferece um chatbot com renderização de mensagens em Markdown.
+
+## Tecnologias principais
+
+- React 19
+- Vite
+- AWS Amplify (`@aws-amplify/auth`)
+- Axios
+- React Markdown (`react-markdown` + `remark-gfm`)
 
 ## Requisitos
 
 - Node.js 18+ / npm
 - AWS CLI configurado localmente
-- AWS Floci ou LocalStack executando em `http://localhost:4566`
+- LocalStack ou AWS Floci executando em `http://localhost:4566`
 
 ## Instalação
 
@@ -16,78 +28,66 @@ Aplicação React + Vite com autenticação Cognito local usando AWS Floci.
 npm install
 ```
 
-2. Inicie o simulador AWS Floci / LocalStack.
+2. Inicie o LocalStack ou o serviço AWS Floci local.
 
-3. Crie o User Pool, App Client e usuário de teste com o script:
+3. Gere o User Pool, App Client e usuário de teste:
 
 ```bash
 ./create_user.sh
 ```
 
-O script grava automaticamente os valores gerados em `.env.local` como `VITE_USER_POOL_ID` e `VITE_USER_POOL_CLIENT_ID`.
+O script `create_user.sh` grava automaticamente os valores gerados em `.env.local`:
 
-## Configuração de autenticação
+- `VITE_USER_POOL_ID`
+- `VITE_USER_POOL_CLIENT_ID`
 
-O projeto usa `@aws-amplify/auth` e o proxy Vite para encaminhar o tráfego de Cognito local.
+## Configuração
 
-- `vite.config.js` define um proxy de `/cognito` para `http://localhost:4566`
-- `src/aws-exports.ts` lê `VITE_USER_POOL_ID` e `VITE_USER_POOL_CLIENT_ID` de `import.meta.env`
+O arquivo `src/aws-exports.ts` lê as variáveis de ambiente do Vite e configura o Amplify:
 
-O `create_user.sh` já salva os valores gerados em `.env.local`, então não é necessário editar `src/aws-exports.ts` manualmente.
+- `import.meta.env.VITE_USER_POOL_ID`
+- `import.meta.env.VITE_USER_POOL_CLIENT_ID`
 
-Exemplo de `src/aws-exports.ts` atual:
+O proxy configurado em `vite.config.js` encaminha as chamadas para Cognito local e evita problemas de CORS.
 
-```ts
-import { Amplify } from 'aws-amplify';
-
-const userPoolId = import.meta.env.VITE_USER_POOL_ID ?? 'us-east-1_5d0d948e5';
-const userPoolClientId = import.meta.env.VITE_USER_POOL_CLIENT_ID ?? '60a5190ee0ea4a9dae61012f64';
-
-Amplify.configure({
-  Auth: {
-    Cognito: {
-      userPoolId,
-      userPoolClientId,
-      userPoolEndpoint: 'http://localhost:5173/cognito'
-    }
-  }
-});
-```
-
-> O endpoint `http://localhost:5173/cognito` usa a configuração de proxy do Vite para evitar CORS e redirecionar para o Floci local.
->
-> O código principal de UI agora está em `src/features/Account` e `src/features/Chat`.
-
-## Executar em desenvolvimento
+## Executando o projeto
 
 ```bash
 npm run dev
 ```
 
-Abra `http://localhost:5173` no navegador.
+Abra o endereço exibido no terminal para acessar a aplicação.
 
-## Login
+## Estrutura do projeto
 
-A interface de login usa `signIn()` de `@aws-amplify/auth` e valida se `result.isSignedIn` para confirmar a autenticação.
+- `src/App.jsx` — componente principal do app
+- `src/features/Account/Login.tsx` — tela de login com `@aws-amplify/auth`
+- `src/features/Chat/Chatbot.tsx` — interface do chat
+- `src/hooks/useChatSession.ts` — lógica de sessão e envio de mensagens
+- `src/storage/chatStorage.ts` — persistência de sessão no `localStorage`
+- `src/features/Chat/services/api.ts` — chamadas HTTP para a API de chat
+- `src/features/Chat/services/chatService.ts` — serviços de chat e formatação de mensagens
+- `src/types/chats.ts` — tipos TypeScript usados pelo chat
 
-O código de login está em `src/features/Account/Login.tsx`.
+## Uso
 
-## Chatbot
-
-Após o login bem-sucedido, o aplicativo renderiza o componente `Chatbot` em `src/features/Chat/Chatbot.tsx`.
-
-- O `Chatbot` exibe uma interface de mensagens com histórico e entrada de texto.
-- Ele simula respostas de assistente virtual local enquanto aguarda integração futura com um serviço de IA/LLM.
-- O componente roda somente para usuários autenticados, conforme `src/App.jsx`.
-
-## Scripts úteis
-
-- `npm run dev` — inicia o servidor de desenvolvimento Vite
-- `npm run build` — gera o build de produção
-- `npm run lint` — roda o ESLint
+1. Inicie a aplicação.
+2. Faça login com o usuário criado pelo `create_user.sh`.
+3. Utilize o chatbot para enviar perguntas e receber respostas formatadas em Markdown.
 
 ## Observações
 
-- Garanta que o Floci/LocalStack esteja online antes de iniciar o app.
-- O script `create_user.sh` grava `.env.local` e o arquivo já está ignorado pelo Git.
-- Se mudar o port do Vite ou do simulador, atualize `src/aws-exports.ts` e `vite.config.js` conforme necessário.
+- A autenticação depende de um backend Cognito local em execução.
+- O frontend espera variáveis de ambiente em `.env.local`.
+- A renderização de mensagens usa `react-markdown` e `remark-gfm`.
+
+## Scripts disponíveis
+
+- `npm run dev` — inicia o servidor de desenvolvimento
+- `npm run build` — cria a versão de produção
+- `npm run preview` — pré-visualiza a build de produção
+- `npm run lint` — executa o ESLint no código
+
+## Contato
+
+Se precisar ajustar o ambiente local ou a configuração do Cognito, revise `create_user.sh` e `src/aws-exports.ts`.
